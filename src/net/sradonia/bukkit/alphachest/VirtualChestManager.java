@@ -35,7 +35,6 @@ public class VirtualChestManager {
      */
     public void loadPlayerChest(UUID uuid) {
         File chestFile = new File(this.dataFolder.getPath() + "\\" + uuid + YAML_CHEST_EXTENSION);
-        System.out.print(this.dataFolder.getPath());
         if(chestFile != null && chestFile.exists() && chestFile.isFile()) {
             try {
                 chests.put(uuid, InventoryIO.loadFromYaml(chestFile));
@@ -49,8 +48,6 @@ public class VirtualChestManager {
     public void unloadPlayerChest(UUID uuid) {
         this.saveChest(uuid);
         chests.remove(uuid);
-        
-        System.out.print("szie is: " + chests.size());
     }
     
     
