@@ -1,7 +1,7 @@
 # AlphaChest Improved #
 A Bukkit (Minecraft) plugin. Virtual chests. Always, everywhere.
 
-This is an improved, optimized and updated version of the alphachest plugin, feature wise it is the same as original AlphaChest plugin.
+This is a drag & drop improved, optimized and updated version of the AlphaChest plugin, feature wise it is the same as original AlphaChest plugin.
 
 ## About this build
 - Lazy load of the player chests
