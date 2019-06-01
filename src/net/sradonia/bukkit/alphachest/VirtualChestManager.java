@@ -3,38 +3,62 @@ package net.sradonia.bukkit.alphachest;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.inventory.Inventory;
 
 public class VirtualChestManager {
 
     private static final String YAML_CHEST_EXTENSION = ".chest.yml";
     private static final int YAML_EXTENSION_LENGTH = YAML_CHEST_EXTENSION.length();
-
+    private static final Map<UUID, Inventory> chests = new ConcurrentHashMap<>();
+    
     private final File dataFolder;
     private final Logger logger;
-    private final Map<UUID, Inventory> chests = new HashMap<>();
 
     public VirtualChestManager(File dataFolder, Logger logger) {
         this.logger = logger;
         this.dataFolder = dataFolder;
-
-        load();
     }
-
+    
+    /**
+     * Lazy chest load
+     */
+    public void loadPlayerChest(UUID uuid) {
+        File chestFile = new File(this.dataFolder.getPath() + "\\" + uuid + YAML_CHEST_EXTENSION);
+        System.out.print(this.dataFolder.getPath());
+        if(chestFile != null && chestFile.exists() && chestFile.isFile()) {
+            try {
+                chests.put(uuid, InventoryIO.loadFromYaml(chestFile));
+            } catch (IllegalArgumentException | IOException | InvalidConfigurationException e) {
+                logger.log(Level.WARNING, "Couldn't load chest file: " + chestFile.getName());
+                chestFile.delete();
+            }
+        }
+    }
+    
+    public void unloadPlayerChest(UUID uuid) {
+        this.saveChest(uuid);
+        chests.remove(uuid);
+        
+        System.out.print("szie is: " + chests.size());
+    }
+    
+    
     /**
      * Loads all existing chests from the data folder.
      */
-    private void load() {
+    @Deprecated
+    public void load() {
         dataFolder.mkdirs();
 
         FilenameFilter filter = new FilenameFilter() {
@@ -82,9 +106,7 @@ public class VirtualChestManager {
      */
     public int save() {
         int savedChests = 0;
-
         dataFolder.mkdirs();
-
         Iterator<Entry<UUID, Inventory>> chestIterator = chests.entrySet().iterator();
 
         while (chestIterator.hasNext()) {
@@ -109,7 +131,11 @@ public class VirtualChestManager {
                 }
             }
         }
-
+        
+        if(savedChests > 0) {
+            logger.info("Auto-saved " + savedChests + " chests");
+        }
+        
         return savedChests;
     }
 
@@ -119,16 +145,13 @@ public class VirtualChestManager {
      * @param playerUUID the UUID of the player to save the chest of
      */
     public void saveChest(UUID playerUUID) {
-        dataFolder.mkdirs();
-
-        final String uuidString = playerUUID.toString();
-        final Inventory chest = chests.get(playerUUID);
-        final File chestFile = new File(dataFolder, uuidString + YAML_CHEST_EXTENSION);
-
-        if (chest == null) {
-            // Chest got removed, so we have to delete the file.
-            chestFile.delete();
-        } else {
+        if(chests.containsKey(playerUUID)) {
+            dataFolder.mkdirs();
+    
+            String uuidString = playerUUID.toString();
+            Inventory chest = chests.get(playerUUID);
+            File chestFile = new File(dataFolder, uuidString + YAML_CHEST_EXTENSION);
+    
             try {
                 // Write the chest file in YAML format
                 InventoryIO.saveToYaml(chest, chestFile);

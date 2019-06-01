@@ -1,6 +1,12 @@
-# AlphaChest #
+# AlphaChest Improved #
 A Bukkit (Minecraft) plugin. Virtual chests. Always, everywhere.
 
+This is an improved, optimized and updated version of the alphachest plugin, feature wise it is the same as original AlphaChest plugin.
+
+## About this build
+- Lazy load of the player chests
+- Built againts spigot-api 1.11.2
+- Async chest saving/load
 
 ## History ##
 This plugin is a fork of the discontinued AlphaChest plugin by [Mast3rPlan](http://forums.bukkit.org/members/mast3rplan.383/) which can be found [here](http://forums.bukkit.org/threads/4408/).

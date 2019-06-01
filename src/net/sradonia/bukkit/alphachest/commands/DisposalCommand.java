@@ -8,15 +8,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import net.sradonia.bukkit.alphachest.Teller;
-import net.sradonia.bukkit.alphachest.VirtualChestManager;
 
 public class DisposalCommand implements CommandExecutor {
-
-    private final VirtualChestManager chestManager;
-
-    public DisposalCommand(VirtualChestManager chestManager) {
-        this.chestManager = chestManager;
-    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

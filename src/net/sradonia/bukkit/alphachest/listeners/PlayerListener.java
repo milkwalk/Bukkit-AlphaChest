@@ -14,14 +14,11 @@ import net.sradonia.bukkit.alphachest.VirtualChestManager;
 
 public class PlayerListener implements Listener {
 
-    private final AlphaChestPlugin plugin;
     private final VirtualChestManager chestManager;
-
     private boolean clearOnDeath;
     private boolean dropOnDeath;
 
     public PlayerListener(AlphaChestPlugin plugin, VirtualChestManager chestManager) {
-        this.plugin = plugin;
         this.chestManager = chestManager;
 
         // Load the death event settings
