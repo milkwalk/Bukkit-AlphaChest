@@ -34,7 +34,7 @@ public class VirtualChestManager {
      * Lazy chest load
      */
     public void loadPlayerChest(UUID uuid) {
-        File chestFile = new File(this.dataFolder.getPath() + "\\" + uuid.toString() + YAML_CHEST_EXTENSION);
+        File chestFile = new File(dataFolder, uuid.toString() + YAML_CHEST_EXTENSION);
         if(chestFile != null && chestFile.exists() && chestFile.isFile()) {
             try {
                 chests.put(uuid, InventoryIO.loadFromYaml(chestFile));
