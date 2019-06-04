@@ -1,7 +1,6 @@
 package net.sradonia.bukkit.alphachest;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
@@ -12,14 +11,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.inventory.Inventory;
 
 public class VirtualChestManager {
 
     private static final String YAML_CHEST_EXTENSION = ".chest.yml";
-    private static final int YAML_EXTENSION_LENGTH = YAML_CHEST_EXTENSION.length();
     private static final Map<UUID, Inventory> chests = new ConcurrentHashMap<>();
     
     private final File dataFolder;
@@ -50,52 +47,6 @@ public class VirtualChestManager {
         chests.remove(uuid);
     }
     
-    
-    /**
-     * Loads all existing chests from the data folder.
-     */
-    @Deprecated
-    public void load() {
-        dataFolder.mkdirs();
-
-        FilenameFilter filter = new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                return name.endsWith(YAML_CHEST_EXTENSION);
-            }
-        };
-
-        for (File chestFile : dataFolder.listFiles(filter)) {
-            String chestFileName = chestFile.getName();
-            try {
-                try {
-                    UUID playerUUID = UUID.fromString(chestFileName.substring(0, chestFileName.length() - YAML_EXTENSION_LENGTH));
-                    chests.put(playerUUID, InventoryIO.loadFromYaml(chestFile));
-                } catch (IllegalArgumentException e) {
-                    // Assume that the filename isn't a UUID, and is therefore an old player-name chest
-                    String playerName = chestFileName.substring(0, chestFileName.length() - YAML_EXTENSION_LENGTH);
-                    boolean flagPlayerNotFound = true;
-
-                    for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-                        // Search all the known players, load inventory, flag old file for deletion
-                        if (player.getName().equalsIgnoreCase(playerName)) {
-                            flagPlayerNotFound = false;
-                            chests.put(player.getUniqueId(), InventoryIO.loadFromYaml(chestFile));
-                            chestFile.deleteOnExit();
-                        }
-                    }
-
-                    if (flagPlayerNotFound) {
-                        logger.log(Level.WARNING, "Couldn't load chest file: " + chestFileName);
-                    }
-                }
-            } catch (Exception e) {
-                logger.log(Level.WARNING, "Couldn't load chest file: " + chestFileName);
-            }
-        }
-
-        logger.info("Loaded " + chests.size() + " chests");
-    }
-
     /**
      * Saves all existing chests to the data folder.
      *
