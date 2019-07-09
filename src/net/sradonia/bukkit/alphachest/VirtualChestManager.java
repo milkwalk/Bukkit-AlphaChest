@@ -155,6 +155,7 @@ public class VirtualChestManager {
             } catch (IOException e) {
                 logger.log(Level.WARNING, "Couldn't save chest file: " + chestFile.getName(), e);
             }
+            logger.info("Saved chest for UUID " + playerUUID);
         }
     }
 
@@ -166,10 +167,10 @@ public class VirtualChestManager {
      */
     public Inventory getChest(UUID playerUUID) {
         Inventory chest = chests.get(playerUUID);
-
+        
         if (chest == null) {
-            chest = Bukkit.getServer().createInventory(null, 6 * 9);
-            chests.put(playerUUID, chest);
+            this.loadPlayerChest(playerUUID);
+            chest = chests.get(playerUUID);
         }
 
         return chest;
