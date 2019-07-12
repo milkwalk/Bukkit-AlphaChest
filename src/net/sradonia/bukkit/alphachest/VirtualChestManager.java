@@ -171,6 +171,10 @@ public class VirtualChestManager {
         if (chest == null) {
             this.loadPlayerChest(playerUUID);
             chest = chests.get(playerUUID);
+            if(chest == null) {
+                chest = Bukkit.getServer().createInventory(null, 6 * 9);
+                chests.put(playerUUID, chest);
+            }
         }
 
         return chest;
