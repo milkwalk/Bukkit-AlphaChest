@@ -27,7 +27,7 @@ commands:
     permission: alphachest.save
   disposal:
     description: Opens a virtual disposal bin.
-    aliases: [trash, bin]
+    aliases: [trash, bin, kos]
     permission: alphachest.disposal
   workbench:
     description: Opens a virtual workbench.
