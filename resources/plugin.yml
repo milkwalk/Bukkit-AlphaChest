@@ -5,6 +5,7 @@ author: kroimon
 
 main: net.sradonia.bukkit.alphachest.AlphaChestPlugin
 database: false
+version: 1.4.1
 
 commands:
   chest:

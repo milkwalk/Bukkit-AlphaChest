@@ -5,9 +5,8 @@ This is a drag & drop improved, optimized and updated version of the AlphaChest 
 
 ## About this build
 - Lazy load of the player chests
-- Built againts spigot-api 1.11.2
 - Async chest saving/load
-- supports MC 1.14.2
+- supports MC 1.14.4
 
 ## History ##
 This plugin is a fork of the discontinued AlphaChest plugin by [Mast3rPlan](http://forums.bukkit.org/members/mast3rplan.383/) which can be found [here](http://forums.bukkit.org/threads/4408/).
